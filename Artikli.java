@@ -11,6 +11,7 @@ public class Artikli {
         seznam = new ArrayList<Artikel>();
         kolicina = new ArrayList<Integer>();
     }
+
     public Artikli(final Artikli a) {
         this.seznam = new ArrayList<Artikel>();
         this.kolicina = new ArrayList<Integer>();
@@ -69,6 +70,4 @@ public class Artikli {
         }
         return ret;
     }
-
-
 }

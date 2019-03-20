@@ -24,8 +24,36 @@ public class Main {
         Oseba o = new Oseba("Gorazd", "Spletnik", "Dunajska 16",
                 "Ljubljana","Slovenija","+3861234567",1000);
 
-        Racun rac = new Racun(new Date(), sez, o, o, Racun.NacinDostave.POSTA_SLOVENIJE, Racun.NacinPlacila.GOTOVINA);
-        Racun rac2 = new Racun(new Date(), sez, o, o, Racun.NacinDostave.DPD, Racun.NacinPlacila.KREDITNA_KARTICA);
+        Podjetje p1 = new Podjetje("Henkel Maribor d.o.o.", "Industrijska ulica 23", "Maribor",
+                "Slovenija", 2000, "+38622222100", "58665765", "6261752000",
+                true);
+        Podjetje p2 = new Podjetje("Arriva Stajerska d.d.", "Meljska Cesta 97", "Maribor",
+                "Slovenija", 2000, "+38623003360", "31727077", "5263433000",
+                false);
+        Podjetje p3 = new Podjetje("Andra d.o.o.", "Fala 40", "Fala",
+                "Slovenija", 2343, "+38641652168", "74545167", "5707323000",
+                false);
+
+        Racun rac = new Racun(new Date(), sez, o, o, Racun.NacinDostave.POSTA_SLOVENIJE, Racun.NacinPlacila.GOTOVINA, p1, p1.getDavcnaStevilka());
+        Racun rac2 = new Racun(new Date(), sez, o, o, Racun.NacinDostave.DPD, Racun.NacinPlacila.KREDITNA_KARTICA, p2, p2.getDavcnaStevilka());
+
+        if(rac.search("GOTOVINA")) {
+            System.out.println("Niz GOTOVINA obstaja v racunu");
+        } else {
+            System.out.println("Niz GOTOVINA ne obstaja v racunu");
+        }
+
+        if(Artikel.checkDigit(a1.getEAN())) {
+            System.out.println("Artikel " + a1.getIme() + " ima veljavno crtno kodo");
+        } else {
+            System.out.println("Artikel " + a1.getIme() + " nima veljavno crtno kodo");
+        }
+
+        if(rac.isDavcniZavezanec()) {
+            System.out.println("Podjetje " + rac.getIzdajatelj().getIme() + " je davcni zavezanec\n");
+        } else {
+            System.out.println("Podjetje " + rac.getIzdajatelj().getIme() + " ni davcni zavezanec\n");
+        }
 
         VodenjeRacunov v = new VodenjeRacunov(rac, rac2);
         System.out.println(v.toString());

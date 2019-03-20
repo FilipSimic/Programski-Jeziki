@@ -39,9 +39,7 @@ public class Oseba {
         return naslov;
     }
 
-    public void setNaslov(String naslov) {
-        this.naslov = naslov;
-    }
+    public void setNaslov(String naslov) { this.naslov = naslov; }
 
     public String getMesto() {
         return mesto;

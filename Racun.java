@@ -1,8 +1,9 @@
 package Vaja1;
 
 import java.util.Date;
+import java.util.UUID;
 
-public class Racun {
+public class Racun implements Searchable {
 
     public enum NacinPlacila {
         GOTOVINA,
@@ -18,9 +19,7 @@ public class Racun {
         DPD
     }
 
-    private static int counter = 1;
-    private int id;
-
+    private UUID id;
     private Date datum;
     private Artikli seznam;
     private double skupniZnesekRacuna;
@@ -30,11 +29,13 @@ public class Racun {
     private NacinPlacila nacinPlacila;
     private NacinDostave nacinDostave;
 
-    private int EAN = generateEAN();
+    private Podjetje izdajatelj;
+    private String davcnaStevilkaPodjetja;
 
     public Racun(Date datum, Artikli seznam, Oseba podatkiZaNarocilo,
-                 Oseba podatkiZaDostavo, NacinDostave nacinDostave, NacinPlacila nacinPlacila) {
-        this.id = counter++;
+                 Oseba podatkiZaDostavo, NacinDostave nacinDostave, NacinPlacila nacinPlacila,
+                 Podjetje izdajatelj, String davcnaStevilkaPodjetja) {
+        this.id = UUID.randomUUID();
         this.datum = datum;
         this.seznam = new Artikli(seznam);
         this.podatkiZaNarocilo = podatkiZaNarocilo;
@@ -42,12 +43,9 @@ public class Racun {
         this.nacinPlacila = nacinPlacila;
         this.nacinDostave = nacinDostave;
         this.skupniZnesekRacuna = skupnaCena();
+        this.izdajatelj = izdajatelj;
+        this.davcnaStevilkaPodjetja = davcnaStevilkaPodjetja;
     }
-
-    private int generateEAN() {
-        return (int) Math.floor(Math.random() * (99999999 - 10000000 + 1)) + 10000000;
-    }
-
 
     public double skupnaCena() {
         int price = 0;
@@ -58,13 +56,36 @@ public class Racun {
         return d;
     }
 
+    public boolean isDavcniZavezanec() {
+        return this.izdajatelj.isDavcniZavezanec();
+    }
+
     public double getSkupniZnesekRacuna() {
         return skupniZnesekRacuna;
     }
 
+    public boolean search(String niz) {
+        if(this.id.toString() == niz || this.datum.toString() == niz || this.podatkiZaNarocilo.toString() == niz ||
+            this.podatkiZaDostavo.toString() == niz || this.nacinDostave.toString() == niz ||
+                this.nacinPlacila.toString() == niz || this.seznam.toString() == niz ||
+                    String.valueOf(this.skupniZnesekRacuna) == niz) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public Podjetje getIzdajatelj() {
+        return izdajatelj;
+    }
+
+    public String getDavcnaStevilkaPodjetja() {
+        return davcnaStevilkaPodjetja;
+    }
+
     @Override
     public String toString() {
-        return "EAN Code: " + EAN + "\n" + "ID: " + id + "\n" + "Datum: " + datum.toString() +
+        return "ID: " + id + "\n" + "Datum: " + datum.toString() + "\nIzdajatelj: " + izdajatelj.toString() + "\n" +
                 "\nPodatki za narocilo: \n" + podatkiZaNarocilo.toString() + "\nPodatki za dostavo: \n" + podatkiZaDostavo.toString() +
                 "\nNacin dostave: " + nacinDostave + "\nNacin placila: " + nacinPlacila + "\n\n" + seznam.toString() +
                 "Skupni znesek racuna: " + skupniZnesekRacuna + "\n\n";
