@@ -1,7 +1,6 @@
 package Vaja1;
 
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
 
 public class Racun implements Searchable {
 
@@ -23,6 +22,7 @@ public class Racun implements Searchable {
     private Date datum;
     private Artikli seznam;
     private double skupniZnesekRacuna;
+    private double skupniZnesekRacunaPopusti;
 
     private Oseba podatkiZaNarocilo;
     private Oseba podatkiZaDostavo;
@@ -31,6 +31,8 @@ public class Racun implements Searchable {
 
     private Podjetje izdajatelj;
     private String davcnaStevilkaPodjetja;
+
+    private List<Kupon> popusti;
 
     public Racun(Date datum, Artikli seznam, Oseba podatkiZaNarocilo,
                  Oseba podatkiZaDostavo, NacinDostave nacinDostave, NacinPlacila nacinPlacila,
@@ -45,6 +47,7 @@ public class Racun implements Searchable {
         this.skupniZnesekRacuna = skupnaCena();
         this.izdajatelj = izdajatelj;
         this.davcnaStevilkaPodjetja = davcnaStevilkaPodjetja;
+        this.popusti = new ArrayList<>();
     }
 
     public double skupnaCena() {
@@ -54,6 +57,19 @@ public class Racun implements Searchable {
         }
         double d = (double)price/100;
         return d;
+    }
+
+    public void dodajKuponZaPopust(Kupon kupon) {
+        if(!popusti.isEmpty()) {
+            for(Kupon k : popusti) {
+                if(k.getEAN() == kupon.getEAN()) {
+                    throw new IllegalArgumentException("Kupon je ze dodan na racun");
+                }
+            }
+            popusti.add(kupon);
+        } else {
+            popusti.add(kupon);
+        }
     }
 
     public boolean isDavcniZavezanec() {
@@ -83,8 +99,28 @@ public class Racun implements Searchable {
         return davcnaStevilkaPodjetja;
     }
 
-    public void Kupon(String EAN) {
-
+    private void obdelajPopuste() {
+        for(Kupon k : popusti) {
+            if(k.getTip() == Kupon.Tip.CELOTNI_NAKUP || k.getTip() == Kupon.Tip.SPLETNI_NAKUP) {
+                double odstotek = (skupniZnesekRacuna*k.getProcent())/100.0;
+                skupniZnesekRacunaPopusti = skupniZnesekRacuna-odstotek;
+            } else if(k.getTip() == Kupon.Tip.NAJDRAZJI_IZDELEK) {
+                Artikel najdrazji = Collections.max(seznam.getSeznam(), new Comparator<Artikel>(){
+                    public int compare(Artikel x, Artikel y) {
+                        return Integer.compare(x.getCenaZDDV(), y.getCenaZDDV());
+                    }
+                });
+                najdrazji.setCenaZDDV(najdrazji.getCenaZDDV()-((najdrazji.getCenaZDDV()*k.getProcent())/100));
+                skupniZnesekRacunaPopusti = skupnaCena();
+            } else if(k.getTip() == Kupon.Tip.NAJDRAZJI_BOGO) {
+                Artikel najdrazji = Collections.max(seznam.getSeznam(), new Comparator<Artikel>(){
+                    public int compare(Artikel x, Artikel y) {
+                        return Integer.compare(x.getCenaZDDV(), y.getCenaZDDV());
+                    }
+                });
+                seznam.add(najdrazji, 1);
+            }
+        }
     }
 
     @Override
@@ -95,10 +131,23 @@ public class Racun implements Searchable {
         } else {
             dav = "NE";
         }
-        return "ID: " + id + "\n" + "Datum: " + datum.toString() + "\nIzdajatelj: " + izdajatelj.toString() + "\n" +
-                "Podjetje je davcni zavezanec: " + dav + "\n" +
-                "\nPodatki za narocilo: \n" + podatkiZaNarocilo.toString() + "\nPodatki za dostavo: \n" + podatkiZaDostavo.toString() +
-                "\nNacin dostave: " + nacinDostave + "\nNacin placila: " + nacinPlacila + "\n\n" + seznam.toString() +
-                "Skupni znesek racuna: " + skupniZnesekRacuna + "\n\n";
+        if(!popusti.isEmpty()) {
+            obdelajPopuste();
+            String temp = "Kuponi\n";
+            for(Kupon k : popusti) {
+                temp += k.toString() + "\n";
+            }
+            return "ID: " + id + "\n" + "Datum: " + datum.toString() + "\nIzdajatelj: " + izdajatelj.toString() + "\n" +
+                    "Podjetje je davcni zavezanec: " + dav + "\n" +
+                    "\nPodatki za narocilo: \n" + podatkiZaNarocilo.toString() + "\nPodatki za dostavo: \n" + podatkiZaDostavo.toString() +
+                    "\nNacin dostave: " + nacinDostave + "\nNacin placila: " + nacinPlacila + "\n\n" + seznam.toString() + temp + "\n" +
+                    "Skupni znesek racuna: " + skupniZnesekRacuna + "\n" + "Skupni znesek z popustom: " + String.format("%.2f", skupniZnesekRacunaPopusti) + "\n\n";
+        } else {
+            return "ID: " + id + "\n" + "Datum: " + datum.toString() + "\nIzdajatelj: " + izdajatelj.toString() + "\n" +
+                    "Podjetje je davcni zavezanec: " + dav + "\n" +
+                    "\nPodatki za narocilo: \n" + podatkiZaNarocilo.toString() + "\nPodatki za dostavo: \n" + podatkiZaDostavo.toString() +
+                    "\nNacin dostave: " + nacinDostave + "\nNacin placila: " + nacinPlacila + "\n\n" + seznam.toString() +
+                    "Skupni znesek racuna: " + skupniZnesekRacuna + "\n\n";
+        }
     }
 }

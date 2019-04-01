@@ -53,24 +53,35 @@ public class Main {
         ar2.setCenaBrezDDV(250);
         System.out.println(ar1.toString());
         System.out.println(ar2.toString());
-        System.out.println(ar3.toString());
+        System.out.println(ar3.toString() + "\n\n");
 
-        Racun rac = new Racun(new Date(), sez, o, o, Racun.NacinDostave.POSTA_SLOVENIJE, Racun.NacinPlacila.GOTOVINA, p1, p1.getDavcnaStevilka());
-        Racun rac2 = new Racun(new Date(), sez, o, o, Racun.NacinDostave.DPD, Racun.NacinPlacila.KREDITNA_KARTICA, p2, p2.getDavcnaStevilka());
+        Racun rac = new Racun(new Date(), test, o, o, Racun.NacinDostave.POSTA_SLOVENIJE, Racun.NacinPlacila.GOTOVINA, p1, p1.getDavcnaStevilka());
+        Racun rac2 = new Racun(new Date(), test, o, o, Racun.NacinDostave.DPD, Racun.NacinPlacila.KREDITNA_KARTICA, p2, p2.getDavcnaStevilka());
 
-//        if(rac.search("GOTOVINA")) {
-//            System.out.println("Niz GOTOVINA obstaja v racunu");
-//        } else {
-//            System.out.println("Niz GOTOVINA ne obstaja v racunu");
-//        }
-//
-//        if(Artikel.checkDigit(a1.getEAN())) {
-//            System.out.println("Artikel " + a1.getIme() + " ima veljavno crtno kodo");
-//        } else {
-//            System.out.println("Artikel " + a1.getIme() + " nima veljavno crtno kodo");
-//        }
-//
-//        Invoices v = new Invoices(rac, rac2);
-//        System.out.println(v.toString());
+        Kupon k1 = new Kupon(10, new Date(), Kupon.Tip.CELOTNI_NAKUP);
+        Kupon k2 = new Kupon(15, new Date(), Kupon.Tip.NAJDRAZJI_IZDELEK);
+        Kupon k3 = new Kupon(5, new Date(), Kupon.Tip.NAJDRAZJI_BOGO);
+
+        rac.dodajKuponZaPopust(k1);
+        rac.dodajKuponZaPopust(k3);
+        rac2.dodajKuponZaPopust(k2);
+
+        System.out.println(rac.toString());
+        System.out.println(rac2.toString());
+
+        if(rac.search("GOTOVINA")) {
+            System.out.println("Niz GOTOVINA obstaja v racunu");
+        } else {
+            System.out.println("Niz GOTOVINA ne obstaja v racunu");
+        }
+
+        if(Artikel.checkDigit(a1.getEAN())) {
+            System.out.println("Artikel " + a1.getIme() + " ima veljavno crtno kodo");
+        } else {
+            System.out.println("Artikel " + a1.getIme() + " nima veljavno crtno kodo");
+        }
+
+        Invoices v = new Invoices(rac, rac2);
+        System.out.println(v.toString());
     }
 }

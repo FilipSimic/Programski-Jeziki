@@ -55,6 +55,8 @@ public class Artikel implements Searchable {
         this.cenaBrezDDV = a.cenaBrezDDV;
         this.cenaZDDV = a.cenaZDDV;
         this.davcnaStopnja = a.davcnaStopnja;
+        this.teza = a.teza;
+        this.oddelek = a.oddelek;
     }
 
     private void vracunajDDV() {
@@ -115,6 +117,15 @@ public class Artikel implements Searchable {
         vracunajDDV();
     }
 
+    public void setCenaZDDV(int cenaZDDV) {
+        if(teza != 0) {
+            double a = (this.teza*cenaZDDV)/1000.0;
+            this.cenaZDDV = (int)Math.round(a);
+        } else {
+            this.cenaZDDV = cenaZDDV;
+        }
+    }
+
     public int getCenaZDDV() {
         return cenaZDDV;
     }
@@ -161,7 +172,7 @@ public class Artikel implements Searchable {
         }
     }
 
-    public String calculateDigit(String EAN) {
+    public static String calculateDigit(String EAN) {
         List<Integer> nums = new ArrayList<>();
         int checkDigit = Character.getNumericValue(EAN.charAt(EAN.length()-1));
         for(int i=0; i<EAN.length()-1; i++) {
