@@ -1,9 +1,11 @@
 package Vaja1;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class Artikli {
+public class Artikli implements JsonSupport {
     private List<Artikel> seznam;
     private List<Integer> kolicina;
 
@@ -60,6 +62,24 @@ public class Artikli {
         } catch(Exception ex) {
             throw ex;
         }
+    }
+
+    public void setKolicina(List<Integer> kolicina) {
+        this.kolicina = kolicina;
+    }
+
+    public String toJson() {
+        return new Gson().toJson(this);
+    }
+
+    public List<Integer> getKolicina() {
+        return kolicina;
+    }
+
+    public void fromJson(String json) {
+        Artikli temp = new Gson().fromJson(json, Artikli.class);
+        setSeznam(temp.getSeznam());
+        setKolicina(temp.getKolicina());
     }
 
     @Override

@@ -98,10 +98,10 @@ public class Podjetje implements Searchable {
     }
 
     public boolean search(String niz) {
-        if(this.ime == niz || this.naslov == niz || this.mesto == niz ||
-                this.drzava == niz || String.valueOf(this.postnaStevilka) == niz ||
-                this.telefonskaStevilka == niz || this.davcnaStevilka == niz ||
-                this.maticnaStevilka == niz) {
+        if(this.ime.contains(niz) || this.naslov.contains(niz) || this.mesto.contains(niz) ||
+                this.drzava.contains(niz) || String.valueOf(this.postnaStevilka).contains(niz) ||
+                this.telefonskaStevilka.contains(niz) || this.davcnaStevilka.contains(niz) ||
+                this.maticnaStevilka.contains(niz)) {
             return true;
         } else {
             return false;

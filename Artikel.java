@@ -1,9 +1,12 @@
 package Vaja1;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Artikel implements Searchable {
+
     private String ime;
     private int cenaBrezDDV;
     private int cenaZDDV;
@@ -11,11 +14,40 @@ public class Artikel implements Searchable {
     private String EAN = generateEAN();
     private String drzava = getCountry();
 
+    private String oddelek;
+    private int teza;
+
     public Artikel(String ime, int cena, int ddv) {
-        this.ime = ime;
-        this.cenaBrezDDV = cena;
-        this.davcnaStopnja = ddv;
-        vracunajDDV();
+        if(ime.length() == 12) {
+            String odd = ime.substring(0, 3);
+            String id = ime.substring(3, 7);
+            if(Integer.parseInt(odd) >= 200 && Integer.parseInt(odd) <= 299) {
+                this.EAN = calculateDigit(ime);
+                this.drzava = "Slovenija";
+                obdelajEANkodo();
+                double a = (this.teza*cena)/1000.0;
+                this.cenaBrezDDV = (int)Math.round(a);
+                this.davcnaStopnja = ddv;
+                vracunajDDV();
+            } else {
+                this.EAN = calculateDigit(ime);
+                this.ime = "Artikel"+id;
+                this.drzava = getCountry();
+                this.cenaBrezDDV = cena;
+                this.davcnaStopnja = ddv;
+                this.oddelek = "/";
+                this.teza = 0;
+                vracunajDDV();
+
+            }
+        } else {
+            this.ime = ime;
+            this.cenaBrezDDV = cena;
+            this.davcnaStopnja = ddv;
+            this.oddelek = "/";
+            this.teza = 0;
+            vracunajDDV();
+        }
     }
 
     public Artikel(final Artikel a) {
@@ -33,7 +65,7 @@ public class Artikel implements Searchable {
 
     private String generateEAN() {
         String temp = new String();
-        for(int i=0; i<13; i++) {
+        for(int i=0; i<12; i++) {
             int t =(int)(Math.random() * 9);
             temp += t;
         }
@@ -60,8 +92,26 @@ public class Artikel implements Searchable {
         return cenaBrezDDV;
     }
 
+    public int getTeza() {
+        return teza;
+    }
+
+    public void setTeza(int teza) {
+        String odd = this.EAN.substring(0, 3);
+        String id = this.EAN.substring(3, 7);
+        this.EAN = calculateDigit(odd+id+String.format("%04d", teza)+"1");
+        this.teza = teza;
+        double a = (this.teza*cenaBrezDDV)/1000.0;
+        this.cenaBrezDDV = (int)Math.round(a);
+    }
+
     public void setCenaBrezDDV(int cenaBrezDDV) {
-        this.cenaBrezDDV = cenaBrezDDV;
+        if(teza != 0) {
+            double a = (this.teza*cenaBrezDDV)/1000.0;
+            this.cenaBrezDDV = (int)Math.round(a);
+        } else {
+            this.cenaBrezDDV = cenaBrezDDV;
+        }
         vracunajDDV();
     }
 
@@ -78,8 +128,8 @@ public class Artikel implements Searchable {
     }
 
     public boolean search(String niz) {
-        if(this.ime == niz || this.EAN == niz || String.valueOf(this.cenaBrezDDV) == niz ||
-            String.valueOf(this.cenaZDDV) == niz || String.valueOf(this.davcnaStopnja) == niz) {
+        if(this.ime.contains(niz) || this.EAN.contains(niz) || String.valueOf(this.cenaBrezDDV).contains(niz) ||
+            String.valueOf(this.cenaZDDV).contains(niz) || String.valueOf(this.davcnaStopnja).contains(niz)) {
             return true;
         } else {
             return false;
@@ -111,207 +161,125 @@ public class Artikel implements Searchable {
         }
     }
 
+    public String calculateDigit(String EAN) {
+        List<Integer> nums = new ArrayList<>();
+        int checkDigit = Character.getNumericValue(EAN.charAt(EAN.length()-1));
+        for(int i=0; i<EAN.length()-1; i++) {
+            nums.add(Character.getNumericValue(EAN.charAt(i)));
+        }
+        int sum = 0;
+        for(int i=0; i<nums.size(); i++) {
+            if(i%2 != 0) {
+                nums.set(i, nums.get(i)*3);
+            }
+            sum += nums.get(i);
+        }
+        int round = (int)(Math.round(sum/10.0)*10);
+        if(round<sum) {
+            round += 10;
+        }
+
+        if(checkDigit == (round-sum)) {
+            return EAN;
+        } else {
+            return EAN.substring(0, EAN.length()-1) + (round-sum);
+        }
+    }
+
     private String getCountry() {
         String countryCode = this.EAN.substring(0, 3);
-        for(int i=0; i<20; i++) {
-            if(i<=9) {
-                if(("00"+String.valueOf(i)).equals(countryCode)) {
-                    return "GS1 ZDA";
+        List<String> countryInfo = new ArrayList<>();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("drzave.txt"));
+            String line = br.readLine();
+
+            while (line != null) {
+                countryInfo.add(line);
+                line = br.readLine();
+            }
+        } catch(Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+
+        for(int i=0; i<countryInfo.size(); i++) {
+            String[] info = countryInfo.get(i).split(":::");
+            if(info[0].contains("-")) {
+                String[] temp = info[0].split(" - ");
+                for(int j = Integer.parseInt(temp[0]); j<Integer.parseInt(temp[1]); j++) {
+                    if(String.format("%03d", j).equals(countryCode)) {
+                        return info[1];
+                    }
                 }
             } else {
-                if(("0"+String.valueOf(i)).equals(countryCode)) {
-                    return "GS1 ZDA";
+                if(info[0].equals(countryCode)) {
+                    return info[1];
                 }
-            }
-        }
-
-        for(int i=30; i<40; i++) {
-            if(("0"+String.valueOf(i)).equals(countryCode)) {
-                return "GS1 ZDA";
-            }
-        }
-
-        for(int i=60; i<140; i++) {
-            if(i<=99) {
-                if(("0"+String.valueOf(i)).equals(countryCode)) {
-                    return "GS1 ZDA";
-                }
-            } else {
-                if((String.valueOf(i)).equals(countryCode)) {
-                    return "GS1 ZDA";
-                }
-            }
-        }
-
-        for(int i=300; i<380; i++) {
-            if((String.valueOf(i)).equals(countryCode)) {
-                return "GS1 Francija";
-            }
-        }
-
-        if("380".equals(countryCode)) {
-            return "GS1 Bulgarija";
-        }
-
-        if("383".equals(countryCode)) {
-            return "GS1 Slovenija";
-        }
-
-        if("385".equals(countryCode)) {
-            return "GS1 Hrvaska";
-        }
-
-        if("387".equals(countryCode)) {
-            return "GS1 BIH";
-        }
-
-        if("389".equals(countryCode)) {
-            return "GS1 Monte Negro";
-        }
-
-        for(int i=400; i<441; i++) {
-            if((String.valueOf(i)).equals(countryCode)) {
-                return "GS1 Nemcija";
-            }
-        }
-
-        for(int i=460; i<470; i++) {
-            if((String.valueOf(i)).equals(countryCode)) {
-                return "GS1 Rusija";
-            }
-        }
-
-        if("470".equals(countryCode)) {
-            return "GS1 Kirgistan";
-        }
-
-        if("471".equals(countryCode)) {
-            return "GS1 Taivan";
-        }
-
-        if("474".equals(countryCode)) {
-            return "GS1 Estonija";
-        }
-
-        if("475".equals(countryCode)) {
-            return "GS1 Latvija";
-        }
-
-        if("476".equals(countryCode)) {
-            return "GS1 Azerbejdzan";
-        }
-
-        if("477".equals(countryCode)) {
-            return "GS1 Litva";
-        }
-
-        if("478".equals(countryCode)) {
-            return "GS1 Uzbekistan";
-        }
-
-        if("479".equals(countryCode)) {
-            return "GS1 Sri Lanka";
-        }
-
-        if("480".equals(countryCode)) {
-            return "GS1 Filipini";
-        }
-
-        if("481".equals(countryCode)) {
-            return "GS1 Belorusija";
-        }
-
-        if("482".equals(countryCode)) {
-            return "GS1 Ukrajina";
-        }
-
-        if("484".equals(countryCode)) {
-            return "GS1 Moldavija";
-        }
-
-        if("485".equals(countryCode)) {
-            return "GS1 Armenija";
-        }
-
-        if("486".equals(countryCode)) {
-            return "GS1 Gruzija";
-        }
-
-        if("487".equals(countryCode)) {
-            return "GS1 Kazahstan";
-        }
-
-        if("489".equals(countryCode)) {
-            return "GS1 Hong Kong";
-        }
-
-        for(int i=450; i<460; i++) {
-            if((String.valueOf(i)).equals(countryCode)) {
-                return "GS1 Japonska";
-            }
-        }
-
-        for(int i=490; i<500; i++) {
-            if((String.valueOf(i)).equals(countryCode)) {
-                return "GS1 Japonska";
-            }
-        }
-
-        for(int i=500; i<510; i++) {
-            if((String.valueOf(i)).equals(countryCode)) {
-                return "GS1 VB";
-            }
-        }
-
-        if("520".equals(countryCode)) {
-            return "GS1 Grcija";
-        }
-
-        if("528".equals(countryCode)) {
-            return "GS1 Libanon";
-        }
-
-        if("529".equals(countryCode)) {
-            return "GS1 Ciper";
-        }
-
-        if("530".equals(countryCode)) {
-            return "GS1 Albanija";
-        }
-
-        if("531".equals(countryCode)) {
-            return "GS1 Albanija";
-        }
-
-        if("535".equals(countryCode)) {
-            return "GS1 Malta";
-        }
-
-        if("539".equals(countryCode)) {
-            return "GS1 Irska";
-        }
-
-        for(int i=540; i<550; i++) {
-            if((String.valueOf(i)).equals(countryCode)) {
-                return "GS1 Belgija & Luksemburg";
-            }
-        }
-
-        if("560".equals(countryCode)) {
-            return "GS1 Portugalska";
-        }
-
-        if("569".equals(countryCode)) {
-            return "GS1 Islandija";
-        }
-
-        for(int i=570; i<580; i++) {
-            if((String.valueOf(i)).equals(countryCode)) {
-                return "GS1 Belgija & Luksemburg";
             }
         }
 
         return "/";
+    }
+
+    public void setEAN(String EAN) {
+        this.EAN = calculateDigit(EAN);
+    }
+
+    private void obdelajEANkodo() {
+        String odd = this.EAN.substring(0, 3);
+        String id = this.EAN.substring(3, 7);
+        String t = this.EAN.substring(7, 11);
+
+        List<String> oddelki = new ArrayList<>();
+        List<String> idji = new ArrayList<>();
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("oddelki.txt"));
+            String line = br.readLine();
+
+            while (line != null) {
+                oddelki.add(line);
+                line = br.readLine();
+            }
+        } catch(Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("idji.txt"));
+            String line = br.readLine();
+
+            while (line != null) {
+                idji.add(line);
+                line = br.readLine();
+            }
+        } catch(Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+
+        boolean valid = false;
+
+        for(int i=0; i<oddelki.size(); i++) {
+            String[] o = oddelki.get(i).split(" - ");
+            if(odd.equals(o[0])) {
+                if(Integer.parseInt(id) >= Integer.parseInt(o[2]) && Integer.parseInt(id) <= Integer.parseInt(o[3])) {
+                    for(int j=0; j<idji.size(); j++) {
+                        String[] temp = idji.get(j).split(" - ");
+                        if (Integer.parseInt(id) == Integer.parseInt(temp[1])) {
+                            this.oddelek = o[1];
+                            this.ime = temp[0];
+                            this.teza = Integer.parseInt(t);
+                            valid = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        if(!valid) {
+            this.oddelek = "/";
+            this.ime = "Artikel"+id;
+            this.teza = 0;
+        }
     }
 
     @Override
@@ -319,8 +287,14 @@ public class Artikel implements Searchable {
         double p1 = (double)this.cenaBrezDDV/100;
         double p2 = (double)this.cenaZDDV/100;
         double p3 = (double)this.davcnaStopnja/100;
-        return "EAN Code: " + EAN + "\n" + "Drzava: " + drzava + '\n' + "Ime artikla: " + ime + "\n" +
-                "Cena artikla brez DDV: " + p1 + "eur" +
-                "\n" + "Cena artikla z " + p3 + "% DDV: " + p2 + "eur";
+        if(teza == 0 && oddelek.equals("/")) {
+            return "EAN Code: " + EAN + "\n" + "Drzava: " + drzava + '\n' + "Ime artikla: " + ime + "\n" +
+                    "Cena artikla brez DDV: " + p1 + "eur" +
+                    "\n" + "Cena artikla z " + p3 + "% DDV: " + p2 + "eur";
+        } else {
+            return "EAN Code: " + EAN + "\n" + "Drzava: " + drzava + '\n' + "Ime artikla: " + ime + "\n" +
+                    "Cena artikla brez DDV: " + p1 + "eur" +
+                    "\n" + "Cena artikla z " + p3 + "% DDV: " + p2 + "eur" + "\n" + "Oddelek: " + oddelek + "\nTeza: " + teza;
+        }
     }
 }

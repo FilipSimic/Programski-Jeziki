@@ -65,10 +65,10 @@ public class Racun implements Searchable {
     }
 
     public boolean search(String niz) {
-        if(this.id.toString() == niz || this.datum.toString() == niz || this.podatkiZaNarocilo.toString() == niz ||
-            this.podatkiZaDostavo.toString() == niz || this.nacinDostave.toString() == niz ||
-                this.nacinPlacila.toString() == niz || this.seznam.toString() == niz ||
-                    String.valueOf(this.skupniZnesekRacuna) == niz) {
+        if(this.id.toString().contains(niz) || this.datum.toString().contains(niz) || this.podatkiZaNarocilo.toString().contains(niz) ||
+            this.podatkiZaDostavo.toString().contains(niz) || this.nacinDostave.toString().contains(niz) ||
+                this.nacinPlacila.toString().contains(niz) || this.seznam.toString().contains(niz) ||
+                    String.valueOf(this.skupniZnesekRacuna).contains(niz)) {
             return true;
         } else {
             return false;
@@ -83,9 +83,20 @@ public class Racun implements Searchable {
         return davcnaStevilkaPodjetja;
     }
 
+    public void Kupon(String EAN) {
+
+    }
+
     @Override
     public String toString() {
+        String dav;
+        if(isDavcniZavezanec()) {
+            dav = "DA("+davcnaStevilkaPodjetja+")";
+        } else {
+            dav = "NE";
+        }
         return "ID: " + id + "\n" + "Datum: " + datum.toString() + "\nIzdajatelj: " + izdajatelj.toString() + "\n" +
+                "Podjetje je davcni zavezanec: " + dav + "\n" +
                 "\nPodatki za narocilo: \n" + podatkiZaNarocilo.toString() + "\nPodatki za dostavo: \n" + podatkiZaDostavo.toString() +
                 "\nNacin dostave: " + nacinDostave + "\nNacin placila: " + nacinPlacila + "\n\n" + seznam.toString() +
                 "Skupni znesek racuna: " + skupniZnesekRacuna + "\n\n";

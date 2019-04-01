@@ -34,28 +34,43 @@ public class Main {
                 "Slovenija", 2343, "+38641652168", "74545167", "5707323000",
                 false);
 
+        String asd = sez.toJson();
+        Artikli test = new Artikli();
+        test.fromJson(asd);
+        System.out.println(test.toString());
+
+        Helper.write(asd, "artikli.json");
+        System.out.println(Helper.read("artikli.json"));
+
+        Artikel ar1 = new Artikel("200010005001", 150, slovenijaDDV);
+        Artikel ar2 = new Artikel("220210008002", 180, slovenijaDDV);
+        Artikel ar3 = new Artikel("240410003003", 210, slovenijaDDV);
+
+        System.out.println(ar1.toString());
+        System.out.println(ar2.toString());
+        System.out.println(ar3.toString());
+        ar1.setTeza(900);
+        ar2.setCenaBrezDDV(250);
+        System.out.println(ar1.toString());
+        System.out.println(ar2.toString());
+        System.out.println(ar3.toString());
+
         Racun rac = new Racun(new Date(), sez, o, o, Racun.NacinDostave.POSTA_SLOVENIJE, Racun.NacinPlacila.GOTOVINA, p1, p1.getDavcnaStevilka());
         Racun rac2 = new Racun(new Date(), sez, o, o, Racun.NacinDostave.DPD, Racun.NacinPlacila.KREDITNA_KARTICA, p2, p2.getDavcnaStevilka());
 
-        if(rac.search("GOTOVINA")) {
-            System.out.println("Niz GOTOVINA obstaja v racunu");
-        } else {
-            System.out.println("Niz GOTOVINA ne obstaja v racunu");
-        }
-
-        if(Artikel.checkDigit(a1.getEAN())) {
-            System.out.println("Artikel " + a1.getIme() + " ima veljavno crtno kodo");
-        } else {
-            System.out.println("Artikel " + a1.getIme() + " nima veljavno crtno kodo");
-        }
-
-        if(rac.isDavcniZavezanec()) {
-            System.out.println("Podjetje " + rac.getIzdajatelj().getIme() + " je davcni zavezanec\n");
-        } else {
-            System.out.println("Podjetje " + rac.getIzdajatelj().getIme() + " ni davcni zavezanec\n");
-        }
-
-        VodenjeRacunov v = new VodenjeRacunov(rac, rac2);
-        System.out.println(v.toString());
+//        if(rac.search("GOTOVINA")) {
+//            System.out.println("Niz GOTOVINA obstaja v racunu");
+//        } else {
+//            System.out.println("Niz GOTOVINA ne obstaja v racunu");
+//        }
+//
+//        if(Artikel.checkDigit(a1.getEAN())) {
+//            System.out.println("Artikel " + a1.getIme() + " ima veljavno crtno kodo");
+//        } else {
+//            System.out.println("Artikel " + a1.getIme() + " nima veljavno crtno kodo");
+//        }
+//
+//        Invoices v = new Invoices(rac, rac2);
+//        System.out.println(v.toString());
     }
 }
