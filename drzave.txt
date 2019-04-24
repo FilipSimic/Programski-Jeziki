@@ -1,0 +1,116 @@
+000 - 019:::GS1 ZDA
+020 - 029:::Omejena distribucija (doloci nacionalna organizacija)
+030 - 039:::GS1 ZDA
+040 - 049:::Omejena distribucija (doloci nacionalna organizacija)
+050 - 059:::Kuponi
+060 - 139:::GS1 ZDA
+200 - 299:::Omejena distribucija (doloci nacionalna organizacija)
+300 - 379:::GS1 Francija
+380:::GS1 Bulgarija
+383:::GS1 Slovenija
+385:::GS1 Hrvaska
+387:::GS1 BIH (Bosna in Hercegovina)
+389:::GS1 Monte Negro
+400 - 440:::GS1 Nemcija
+460 - 469:::GS1 Rusija
+470:::GS1 Kirgistan
+471:::GS1 Taivan
+474:::GS1 Estonija
+475:::GS1 Latvija
+476:::GS1 Azerbejdzan
+477:::GS1 Litva
+478:::GS1 Uzbekistan
+479:::GS1 Sri Lanka
+480:::GS1 Filipini
+481:::GS1 Belorusija
+482:::GS1 Ukrajina
+484:::GS1 Moldavija
+485:::GS1 Armenija
+486:::GS1 Gruzija
+487:::GS1 Kazahstan
+489:::GS1 Hong Kong
+450 - 459:::GS1 Japonska
+490 - 499:::GS1 Japonska
+500 - 509:::GS1 VB
+520:::GS1 Grcija
+528:::GS1 Libanon
+529:::GS1 Ciper
+530:::GS1 Albanija
+531:::GS1 Makedonija
+535:::GS1 Malta
+539:::GS1 Irska
+540 - 549:::GS1 Belgija & Luksemburg
+560:::GS1 Portugalska
+569:::GS1 Islandija
+570 - 579:::GS1 Danska
+590:::GS1 Polska
+594:::GS1 Romunija
+599:::GS1 Madzarska
+600 - 601:::GS1 Juzna Afrika
+608:::GS1 Bahrain
+609:::GS1 Mauricius
+611:::GS1 Maroko
+613:::GS1 Alzirija
+616:::GS1 Kenija
+619:::GS1 Tunizija
+621:::GS1 Srija
+622:::GS1 Egipt
+624:::GS1 Libija
+625:::GS1 Jordanija
+626:::GS1 Iran
+627:::GS1 Kuvaijt
+628:::GS1 Saudova Arabija
+629:::GS1 Emirati
+640 - 649:::GS1 Finska
+690 - 695:::GS1 Kitajska
+700 - 709:::GS1 Norveska
+729:::GS1 Izrael
+730 - 739:::GS1 Svedska
+740:::GS1 Gvatemala
+741:::GS1 El Salvador
+742:::GS1 Honduras
+743:::GS1 Nikaragva
+744:::GS1 Kostarica
+745:::GS1 Panama
+746:::GS1 Dominikanska republika
+750:::GS1 Mehika
+754 - 755:::GS1 Kanada
+759:::GS1 Venezuela
+760 - 769:::GS1 Svica
+770:::GS1 Kolumbija
+773:::GS1 Urugvaj
+775:::GS1 Peru
+777:::GS1 Bolivija
+779:::GS1 Argentina
+780:::GS1 Cile
+784:::GS1 Paragvaj
+786:::GS1 Ekvador
+789 - 790:::GS1 Brazilija
+800 - 839:::GS1 Italija
+840 - 849:::GS1 Spanija
+850:::GS1 Kuba
+858:::GS1 Slovaska
+859:::GS1 Ceska
+860:::GS1 Srbija
+865:::GS1 Mongolija
+867:::GS1 Severna Korea
+869:::GS1 Turcija
+870 - 879:::GS1 Nizozemska
+880:::GS1 Juzna Koreja
+884:::GS1 Kambodja
+885/td>:::GS1 Tajska
+888:::GS1 Singapur
+890:::GS1 Indija
+893:::GS1 Vietnam
+899:::GS1 Indonezija
+900 - 919:::GS1 Avstrija
+930 - 939:::GS1 Avstralija
+940 - 949:::GS1 Nova Zelandija
+950:::GS1 sedez
+955:::GS1 Malezija
+958:::GS1 Makao
+977:::Serijske publikacije (ISSN)
+978 - 979:::Knjige (ISBN)
+980:::Vrednostna potrdila
+981 - 982:::Kuponi s skupno valute
+990 - 999:::Kuponi

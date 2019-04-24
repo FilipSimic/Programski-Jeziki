@@ -1,0 +1,18 @@
+Jabolka - 100
+Jagoda - 200
+Banana - 300
+Koren - 1000
+Cebula - 1100
+Solata - 1200
+Piscanec - 2000
+Govedina - 2100
+Svinjina - 2200
+Domaci kruh - 3000
+Zemlje - 3100
+Cokoladni keksi - 3200
+Puding - 4000
+Mlecna rezina - 4100
+Sadni desert - 4200
+Narezek - 5000
+Hrenovka - 5100
+Klobasa - 5200

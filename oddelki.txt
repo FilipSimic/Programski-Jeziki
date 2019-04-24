@@ -1,0 +1,6 @@
+200 - Sadje - 0 - 1000
+210 - Zelenjava - 1000 - 2000
+220 - Meso - 2000 - 3000
+230 - Pekarski izdelki - 3000 - 4000
+240 - Deserti - 4000 - 5000
+250 - Delikatesa - 5000 - 6000
